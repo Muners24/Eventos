@@ -11,8 +11,11 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val Top = Color(0xFF7f5af0)
-val Fondo = Color(0xFF242629)
+val Fondo = Color(0xFF81c0c7)
 
+val Ventanta = Color(0xFF4b89af)
+val VentanaBody = Color(0xFFf3f2f1)
+val cian = Color(0xFF09BC8A)
 val Blue5 = Color(0xFF00628F)
 val Blue4 = Color(0xFF006494)
 val Blue3 = Color(0xFF247BA0)

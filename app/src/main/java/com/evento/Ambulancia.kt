@@ -1,0 +1,79 @@
+package com.evento
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.motion.widget.MotionScene.Transition.TransitionOnClick
+import com.evento.ui.theme.*
+
+class Ambulancia(num: String = ""){
+    private val numero = num
+    public val medicos = mutableListOf<Medico>()
+    public var should_del = false
+    @Composable
+    public fun getMedicos(x: Int = 0,y: Int = 0,onClick: (Medico) -> Unit){
+        var count by rememberSaveable { mutableStateOf(0) }
+        val ancho = LocalConfiguration.current.screenWidthDp
+        var actual = y
+        Text("Correos", fontSize = 35.sp, color = Color.Black, modifier = Modifier.offset(x.dp,actual.dp))
+        actual += 25
+        for(medico in medicos){
+
+            actual+=40
+            Text(text = medico.getCorreo(), fontSize = 20.sp, color = Color.Black, modifier = Modifier.offset((x+5).dp,actual.dp))
+            Image(painter = painterResource(id = R.drawable.del), contentDescription = null, modifier = Modifier
+                .size(30.dp,30.dp)
+                .offset((ancho-x-30).dp,actual.dp)
+                .clickable {count++;if(count > 1) onClick(medico)}
+            )
+        }
+    }
+    public fun addMedico(medico: Medico = Medico("","")){
+        medico.setAsingFlag(true)
+        medicos.add(medico)
+    }
+    public fun removeMedico(medico: Medico = Medico("","")){
+        medico.setAsingFlag(false)
+        medicos.remove(medico)
+    }
+
+    public fun getNum(): String
+    { return numero }
+
+    public fun setFlag(flag: Boolean){
+        should_del = flag
+    }
+}
