@@ -40,40 +40,67 @@ import androidx.constraintlayout.motion.widget.MotionScene.Transition.Transition
 import com.evento.ui.theme.*
 
 class Ambulancia(num: String = ""){
+
     private val numero = num
     public val medicos = mutableListOf<Medico>()
-    public var should_del = false
+    private var accidente: Accidente? = null
+
     @Composable
-    public fun getMedicos(x: Int = 0,y: Int = 0,onClick: (Medico) -> Unit){
+    public fun ShowAccident(){
+        Box(modifier = Modifier.size(50.dp,50.dp).background(Blue5))
+    }
+    @Composable
+    public fun GetMedicos(x: Int = 0,y: Int = 0,onClick: (Medico) -> Unit){
         var count by rememberSaveable { mutableStateOf(0) }
         val ancho = LocalConfiguration.current.screenWidthDp
-        var actual = y
-        Text("Correos", fontSize = 35.sp, color = Color.Black, modifier = Modifier.offset(x.dp,actual.dp))
-        actual += 25
+        Spacer(modifier = Modifier.height(45.dp))
         for(medico in medicos){
-
-            actual+=40
-            Text(text = medico.getCorreo(), fontSize = 20.sp, color = Color.Black, modifier = Modifier.offset((x+5).dp,actual.dp))
-            Image(painter = painterResource(id = R.drawable.del), contentDescription = null, modifier = Modifier
-                .size(30.dp,30.dp)
-                .offset((ancho-x-30).dp,actual.dp)
-                .clickable {count++;if(count > 1) onClick(medico)}
-            )
+            Box(modifier = Modifier.fillMaxWidth()){
+                Text(text = medico.getCorreo(), fontSize = 20.sp, color = Color.Black, modifier = Modifier.offset((x+5).dp,0.dp))
+                Image(painter = painterResource(id = R.drawable.del), contentDescription = null, modifier = Modifier
+                    .size(30.dp, 30.dp)
+                    .offset((ancho - x - 110).dp, 0.dp)
+                    .clickable { count++;if (count > 1) onClick(medico) }
+                )
+            }
         }
     }
     public fun addMedico(medico: Medico = Medico("","")){
-        medico.setAsingFlag(true)
-        medicos.add(medico)
+        if(!medico.getAsignado())
+        {
+            medico.setAsingFlag(true)
+            medicos.add(medico)
+        }
     }
     public fun removeMedico(medico: Medico = Medico("","")){
-        medico.setAsingFlag(false)
-        medicos.remove(medico)
+        if(medico.getAsignado())
+        {
+            medico.setAsingFlag(false)
+            medicos.remove(medico)
+        }
     }
-
     public fun getNum(): String
     { return numero }
-
-    public fun setFlag(flag: Boolean){
-        should_del = flag
+    public fun asignAccidente(ac: Accidente){
+        accidente = ac
     }
+    public fun removeAccidente(){
+        accidente = null
+    }
+
+    public fun getAccidente(): Accidente? {
+        return accidente
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewUserProfiler() {
+    val rol = rememberSaveable { mutableIntStateOf(2) }
+    val op = rememberSaveable { mutableIntStateOf(0) }
+    val view = remember { View(rol.value, op.value) }
+
+    view.Pantalla()
+
 }

@@ -59,7 +59,7 @@ class Participante(
 ) {
 
     @Composable
-    fun consultarDatosGenerales(x: Int = 0,y: Int = 0) {
+    fun ConsultarDatosGenerales(x: Int = 0,y: Int = 0) {
         var string = ""
         string += this.nombre + "\n" + this.numeroParticipante
         Text(text = string,fontSize = 23.sp, color = Color.Black)

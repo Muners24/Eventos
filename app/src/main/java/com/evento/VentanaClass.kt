@@ -105,7 +105,7 @@ class VentanaClass(xi: Int, yi: Int, tituloi: String, ambulanciai: Ambulancia, a
             if(ventanasInternas[1].abierto){
             }
             if(ventanasInternas[0].abierto){
-                ambulancia.getMedicos(xt+20, yt+60){
+                ambulancia.GetMedicos(xt+20, yt+60){
                     ambulancia.removeMedico(it)
                 }
                 /*
@@ -130,19 +130,16 @@ class VentanaClass(xi: Int, yi: Int, tituloi: String, ambulanciai: Ambulancia, a
                     .clickable {
                         onClick();count++;if (count > 1) {
                         ambulancias.remove(ambulancia); del = true
-                    }
+                        }
                     }
                 )
             }
         }
     }
-
     public fun reajustar(yr: Int){
         y = yr
     }
-
 }
-
 
 @Preview(showBackground = true)
 @Composable

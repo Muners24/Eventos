@@ -43,26 +43,32 @@ import androidx.compose.ui.unit.sp
 import com.evento.ui.theme.*
 
 @Composable
-fun SingleCampoTxt(what: String = "",x: Int = 0,y: Int = 0, modifier: Modifier = Modifier, onClick: (String) -> Unit){
+fun SingleCampoTxt(what: String = "",x: Int = 0,y: Int = 0, modifier: Modifier = Modifier,activo: Boolean, onClick: (String) -> Unit):String{
     var text by rememberSaveable { mutableStateOf("") }
     var ancho = LocalConfiguration.current.screenWidthDp
-    TextField(value = text, onValueChange = { newValue -> text = newValue}, modifier = modifier
-        .fillMaxWidth(),
-        label = { Text(what, textAlign = TextAlign.Center, modifier = Modifier) },
-        singleLine = true
-    )
-    if(text != ""){
-        Image(painter = painterResource(id = R.drawable.save), contentDescription = null, modifier = Modifier
-            .size(40.dp, 40.dp)
-            .offset((ancho - x*2.2).dp, (y+5).dp)
-            .clickable { onClick(text) }
+    Box(modifier = Modifier.fillMaxWidth()){
+        TextField(value = text, onValueChange = { newValue -> text = newValue}, modifier = modifier
+            .fillMaxWidth(),
+            label = { Text(what, textAlign = TextAlign.Center, modifier = Modifier) },
+            singleLine = true
         )
+        if(text != ""){
+            Image(painter = painterResource(id = R.drawable.save), contentDescription = null, modifier = Modifier
+                .size(40.dp, 40.dp)
+                .offset((ancho - x-125).dp, 25.dp)
+                .clickable { onClick(text) }
+            )
+        }
     }
+    if(!activo){
+        text = ""
+    }
+    return text
 }
 
 @Composable
 fun SingleNumCampoTxt(what: String = "",x: Int = 0,y: Int = 0, modifier: Modifier = Modifier, onClick: (String) -> Unit){
-    var text by rememberSaveable { mutableStateOf("as") }
+    var text by rememberSaveable { mutableStateOf("") }
     var ancho = LocalConfiguration.current.screenWidthDp
     TextField(value = text, onValueChange = { newValue -> text = newValue}, modifier = modifier
         .fillMaxWidth()
@@ -74,14 +80,14 @@ fun SingleNumCampoTxt(what: String = "",x: Int = 0,y: Int = 0, modifier: Modifie
     if(text != ""){
         Image(painter = painterResource(id = R.drawable.save), contentDescription = null, modifier = Modifier
             .size(40.dp, 40.dp)
-            .offset((ancho - x*4.5).dp, 67.dp)
+            .offset((ancho - x- 20).dp, 67.dp)
             .clickable { onClick(text) }
         )
     }
 }
 
 @Composable
-fun CampoTxt(what: String = "",padding: Int = 0, modifier: Modifier = Modifier, onClick: (String) -> Unit){
+fun CampoTxt(what: String = "",padding: Int = 0, modifier: Modifier = Modifier):String {
     var text by rememberSaveable { mutableStateOf("") }
     var ancho = LocalConfiguration.current.screenWidthDp
     TextField(value = text, onValueChange = { newValue -> text = newValue}, modifier = modifier
@@ -89,6 +95,7 @@ fun CampoTxt(what: String = "",padding: Int = 0, modifier: Modifier = Modifier, 
         .padding(15.dp, (padding + 1).dp),
         label = { Text(what, textAlign = TextAlign.Center, modifier = Modifier) }
     )
+    return text
 }
 
 @Composable
@@ -163,59 +170,86 @@ fun TopBar(puesto: String = "") {
 }
 
 @Composable
-fun Option(optxt: String = "", y: Int = 0, img: Int = 0,onClick: () -> Unit) {
-    val saltos = countSaltos(optxt)
-    val ajustebox = (saltos * 30 + saltos * 12)
+fun Option(optxt: String = "",img: Int,onClick: () -> Unit) {
     val ancho = LocalConfiguration.current.screenWidthDp
-
+    val saltos = countSaltos(optxt)
     Box(
         modifier = Modifier
-            .size((ancho - 30).dp, 110.dp + ajustebox.dp)
-            .offset(15.dp, y.dp)
+            .size((ancho - 30).dp, 110.dp + (saltos * 30 + saltos * 12).dp)
+            .offset(15.dp, 0.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(Blue3)
             .clickable { onClick() }
-    )
-
-    Text(
-        text = optxt,
-        fontSize = 42.sp,
-        color = Blue1,
-        modifier = Modifier
-            .size(363.dp, 160.dp)
-            .offset((ancho / 11).dp, y.dp + 22.dp),
-        textAlign = TextAlign.Left
-    )
-
-    val ajusteimgy = when (optxt) {
-        "Registrar\nEvento", "Registrar\nAccidente" -> y + 56
-        "Médicos" -> y + 145
-        "Datos\nMédicos" -> y + 208
-        "Registrar\nCorredor" -> y + 135
-        "Accidente" -> y + 23
-        "Disponible" -> y + 120
-        "Accidentes" -> y + 315
-        else -> y
+    ){
+        Text(
+            text = optxt,
+            fontSize = 42.sp,
+            color = Blue1,
+            modifier = Modifier
+                .size(363.dp, 160.dp)
+                .offset(25.dp, 22.dp),
+            textAlign = TextAlign.Left
+        )
+        Image(
+            painter = painterResource(id = img),
+            contentDescription = null,
+            modifier = Modifier
+                .scale(scaleX = 0.65f, scaleY = 0.65f)
+                .offset((ancho - 80).dp, 0.dp)
+        )
     }
-
-    Image(
-        painter = painterResource(id = img),
-        contentDescription = null,
-        modifier = Modifier
-            .scale(scaleX = 0.65f, scaleY = 0.65f)
-            .offset((ancho - 80).dp, ajusteimgy.dp)
-    )
 }
 
 public fun countSaltos(text: String): Int {
     return text.count { it == '\n' }
 }
 
+@Composable
+fun BotBar(onClick: () -> Unit) {
+    val ancho = LocalConfiguration.current.screenWidthDp
+    val alto = LocalConfiguration.current.screenHeightDp
+    Column(){
+        Spacer(modifier = Modifier.height((alto-50).dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(61.dp)
+                .background(Blue5)
+        ){
+            Image(
+                painter = painterResource(id = R.drawable.options),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(55.dp, 55.dp)
+                    .offset(44.dp, 0.dp)
+                    .clickable { /* acción */ }
+            )
+
+            Image(
+                painter = painterResource(id = R.drawable.home),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(47.dp, 47.dp)
+                    .offset((ancho / 2 - 22).dp, 2.dp)
+                    .clickable { onClick() }
+            )
+
+            Image(
+                painter = painterResource(id = R.drawable.back),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(55.dp, 55.dp)
+                    .offset((ancho - 97).dp, 0.dp)
+                    .clickable { onClick() }
+            )
+        }
+    }
+}
 @Preview(showBackground = true)
 @Composable
 fun PreviewUserProfilesss() {
     val rol = rememberSaveable { mutableIntStateOf(0) }
-    val op = rememberSaveable { mutableIntStateOf(1) }
+    val op = rememberSaveable { mutableIntStateOf(0) }
     val view = remember { View(rol.value, op.value) }
 
     view.Pantalla()
