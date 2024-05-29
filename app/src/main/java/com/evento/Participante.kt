@@ -62,7 +62,8 @@ class Participante(
     fun ConsultarDatosGenerales(x: Int = 0,y: Int = 0) {
         var string = ""
         string += this.nombre + "\n" + this.numeroParticipante
-        Text(text = string,fontSize = 23.sp, color = Color.Black)
+        Text(text = string,fontSize = 30.sp, color = Color.Black, modifier = Modifier
+            .offset(15.dp,0.dp))
 
         //println("Fecha de nacimiento: $fecha_nacimiento")
         //println("Sexo: $sexo")

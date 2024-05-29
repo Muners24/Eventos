@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -47,14 +48,115 @@ class Ambulancia(num: String = ""){
 
     @Composable
     public fun ShowAccident(){
-        Box(modifier = Modifier.size(50.dp,50.dp).background(Blue5))
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        val ancho = LocalConfiguration.current.screenWidthDp
+
+        Column {
+            EncabezadoAccidente(modifier = Modifier
+                .size((ancho - 20).dp, 80.dp)
+                .offset(10.dp, 0.dp)
+                .background(Color.Black))
+            CuerpoAccidente(){
+
+            }
+        }
+    }
+    @Composable
+    fun EncabezadoAccidente(modifier: Modifier){
+        val ancho = LocalConfiguration.current.screenWidthDp
+        Box(modifier = modifier){
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .padding(3.dp)
+                .background(cian)){
+                Text(text = "Accidente", textAlign = TextAlign.Center, fontSize = 45.sp,modifier = Modifier
+                    .fillMaxWidth()
+                    .offset(0.dp, 5.dp))
+
+            }
+        }
+
+    }
+
+    @Composable
+    fun CuerpoAccidente(onclick: (Participante) -> Unit){
+        val cantidad = accidente?.involucrados?.size
+        val saltos = accidente?.descripcion?.let { countSaltos(it) }
+        val alto = LocalConfiguration.current.screenHeightDp
+        val ancho = LocalConfiguration.current.screenWidthDp
+
+        if (cantidad != null) {
+            if (saltos != null) {
+                Box(modifier = Modifier
+                    .size((ancho - 20).dp, (alto - 220).dp)
+                    .offset(10.dp, 0.dp)
+                    .background(Color.Black)){
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .padding(3.dp)
+                        .background(Color.White)){
+                        LazyColumn(){
+                            item{
+                                BoxParticipante(){
+                                    //showDatosParticipante
+                                }
+                                Spacer(modifier = Modifier.height(10.dp))
+                                accidente?.ubicacion?.let { it1 -> Text(text = it1, fontSize = 30.sp, textAlign = TextAlign.Justify, color = Color.Black, modifier = Modifier
+                                    .width((ancho - 60).dp)
+                                    .offset(15.dp)) }
+                                Spacer(modifier = Modifier.height(10.dp))
+                                Box(modifier = Modifier.fillMaxWidth().height(2.dp).background(Color.Black))
+                                Spacer(modifier = Modifier.height(10.dp))
+                                accidente?.descripcion?.let { it1 -> Text(text = it1, fontSize = 30.sp, textAlign = TextAlign.Justify, color = Color.Black, modifier = Modifier
+                                    .width((ancho - 60).dp)
+                                    .offset(15.dp)) }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    @Composable
+    fun BoxParticipante(onclick: (Participante) -> Unit)
+    {
+        val ancho = LocalConfiguration.current.screenWidthDp
+        val it = accidente?.involucrados?.iterator()
+        if (it != null) {
+            while (it.hasNext()){
+                val it = it.next()
+                Box(modifier = Modifier.height(120.dp)){
+                    Column(){
+                        Spacer(modifier = Modifier.height(10.dp))
+                        it.ConsultarDatosGenerales()
+                        Spacer(modifier = Modifier.height(10.dp))
+                    }
+
+                    Image(painter = painterResource(id = R.drawable.datos), contentDescription = null, modifier = Modifier
+                        .size(100.dp, 100.dp)
+                        .offset((ancho - 130).dp, 10.dp)
+                        .clickable { onclick(it) }
+                    )
+
+                }
+                Box(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp)
+                    .background(Color.Black))
+            }
+
+        }
+
     }
     @Composable
     public fun GetMedicos(x: Int = 0,y: Int = 0,onClick: (Medico) -> Unit){
-        var count by rememberSaveable { mutableStateOf(0) }
+
         val ancho = LocalConfiguration.current.screenWidthDp
         Spacer(modifier = Modifier.height(45.dp))
         for(medico in medicos){
+            var count by rememberSaveable { mutableStateOf(0) }
             Box(modifier = Modifier.fillMaxWidth()){
                 Text(text = medico.getCorreo(), fontSize = 20.sp, color = Color.Black, modifier = Modifier.offset((x+5).dp,0.dp))
                 Image(painter = painterResource(id = R.drawable.del), contentDescription = null, modifier = Modifier

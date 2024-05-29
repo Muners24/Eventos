@@ -80,7 +80,7 @@ fun SingleNumCampoTxt(what: String = "",x: Int = 0,y: Int = 0, modifier: Modifie
     if(text != ""){
         Image(painter = painterResource(id = R.drawable.save), contentDescription = null, modifier = Modifier
             .size(40.dp, 40.dp)
-            .offset((ancho - x- 20).dp, 67.dp)
+            .offset((ancho - x- 60).dp, 67.dp)
             .clickable { onClick(text) }
         )
     }

@@ -389,7 +389,7 @@ class View(roli: Int, opi: Int) {
     fun MedicoAccidente(){
         LazyColumn(modifier = Modifier
             .fillMaxSize()
-            .background(Blue1_2))
+            .background(Blue1))
         {
             item{
                 TopBar("Medico")
@@ -402,7 +402,6 @@ class View(roli: Int, opi: Int) {
         }
         BotBar { op = -1 }
     }
-
     @Composable fun NoAccidenteMensaje(){
         Spacer(modifier = Modifier.height(150.dp))
         Text(text = "No hay un", fontSize = 60.sp, color = Color.Black, textAlign = TextAlign.Center,modifier = Modifier
@@ -435,6 +434,7 @@ class View(roli: Int, opi: Int) {
                 AmbulanciaButton(){
                     nuevo = true
                 }
+                nuevo = true
                 if(nuevo)
                 {
                     RegistrarAmulancia(){
@@ -820,7 +820,7 @@ class Compose : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewUserProfile() {
-    val rol = rememberSaveable { mutableIntStateOf(0) }
+    val rol = rememberSaveable { mutableIntStateOf(2) }
     val op = rememberSaveable { mutableIntStateOf(0) }
     val view = remember { View(rol.value, op.value) }
     view.Pantalla()
