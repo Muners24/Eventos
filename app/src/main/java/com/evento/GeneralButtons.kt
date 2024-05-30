@@ -205,7 +205,7 @@ public fun countSaltos(text: String): Int {
 }
 
 @Composable
-fun BotBar(onClick: () -> Unit) {
+fun BotBar(onClick: (Int) -> Unit) {
     val ancho = LocalConfiguration.current.screenWidthDp
     val alto = LocalConfiguration.current.screenHeightDp
     Column(){
@@ -231,7 +231,7 @@ fun BotBar(onClick: () -> Unit) {
                 modifier = Modifier
                     .size(47.dp, 47.dp)
                     .offset((ancho / 2 - 22).dp, 2.dp)
-                    .clickable { onClick() }
+                    .clickable { onClick(1) }
             )
 
             Image(
@@ -240,7 +240,7 @@ fun BotBar(onClick: () -> Unit) {
                 modifier = Modifier
                     .size(55.dp, 55.dp)
                     .offset((ancho - 97).dp, 0.dp)
-                    .clickable { onClick() }
+                    .clickable { onClick(2) }
             )
         }
     }

@@ -107,8 +107,8 @@ class View(roli: Int, opi: Int) {
                 "Femenino",
                 "maria@example.com",
                 "0987654321",
-                "Juan",
-                987654321,
+                "646 189 38 93",
+                "987654321",
                 65.2f,
                 160f,
                 "B-",
@@ -129,7 +129,7 @@ class View(roli: Int, opi: Int) {
                 "juan@example.com",
                 "1234567890",
                 "María",
-                123456789,
+                "123456789",
                 70.5f,
                 170f,
                 "A+",
@@ -150,7 +150,7 @@ class View(roli: Int, opi: Int) {
                 "ana@example.com",
                 "0987654321",
                 "Pedro",
-                987654321,
+                "987654321",
                 55.2f,
                 165f,
                 "AB-",
@@ -171,7 +171,7 @@ class View(roli: Int, opi: Int) {
                 "carlos@example.com",
                 "9876543210",
                 "Luisa",
-                123456789,
+                "123456789",
                 80.2f,
                 175f,
                 "O+",
@@ -192,7 +192,7 @@ class View(roli: Int, opi: Int) {
                 "elena@example.com",
                 "0123456789",
                 "Pedro",
-                987654321,
+                "987654321",
                 70.0f,
                 160f,
                 "A-",
@@ -213,7 +213,7 @@ class View(roli: Int, opi: Int) {
                 "javier@example.com",
                 "1357924680",
                 "Sandra",
-                987654321,
+                "987654321",
                 90.5f,
                 180f,
                 "AB+",
@@ -234,7 +234,7 @@ class View(roli: Int, opi: Int) {
                 "lucia@example.com",
                 "9876543210",
                 "Diego",
-                123456789,
+                "123456789",
                 60.8f,
                 165f,
                 "O-",
@@ -387,60 +387,66 @@ class View(roli: Int, opi: Int) {
     }
     @Composable
     fun MedicoAccidente(){
+        if(ambulancias[0].getAccidente() != null){
+            op = ambulancias[0].ShowAccident()
+        }else{
+            NoAccidenteMensaje()
+        }
+    }
+    @Composable
+    fun NoAccidenteMensaje(){
         LazyColumn(modifier = Modifier
             .fillMaxSize()
-            .background(Blue1))
+            .background(Blue1_2))
         {
             item{
                 TopBar("Medico")
-                if(ambulancias[0].getAccidente() != null){
-                    ambulancias[0].ShowAccident()
-                }else{
-                    NoAccidenteMensaje()
-                }
+                Spacer(modifier = Modifier.height(150.dp))
+                Text(text = "No hay un", fontSize = 60.sp, color = Color.Black, textAlign = TextAlign.Center,modifier = Modifier
+                    .fillMaxWidth())
+                Spacer(modifier = Modifier.height(15.dp))
+                Text(text = "accidente", fontSize = 60.sp, color = Color.Black, textAlign = TextAlign.Center,modifier = Modifier
+                    .fillMaxWidth())
+                Spacer(modifier = Modifier.height(15.dp))
+                Text(text = "asignado...", fontSize = 60.sp, color = Color.Black, textAlign = TextAlign.Center,modifier = Modifier
+                    .fillMaxWidth())
             }
         }
-        BotBar { op = -1 }
+        BotBar() {
+            op = -1
+        }
     }
-    @Composable fun NoAccidenteMensaje(){
-        Spacer(modifier = Modifier.height(150.dp))
-        Text(text = "No hay un", fontSize = 60.sp, color = Color.Black, textAlign = TextAlign.Center,modifier = Modifier
-            .fillMaxWidth())
-        Spacer(modifier = Modifier.height(15.dp))
-        Text(text = "accidente", fontSize = 60.sp, color = Color.Black, textAlign = TextAlign.Center,modifier = Modifier
-            .fillMaxWidth())
-        Spacer(modifier = Modifier.height(15.dp))
-        Text(text = "asignado...", fontSize = 60.sp, color = Color.Black, textAlign = TextAlign.Center,modifier = Modifier
-            .fillMaxWidth())
-    }
+
     @Composable
     fun MedicoDisponibilidad(){
         //falta implementar
     }
-
     //encargadoMedicos..... medicos listo..... equipo ?  ... listo 75%
     @Composable
     fun EncargadoMedicos() {
         var nuevo by rememberSaveable { mutableStateOf(false) }
         var abierto by rememberSaveable { mutableStateOf(false) }
+        var recomposicion by rememberSaveable { mutableStateOf(false) }
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Blue1)
         ) {
             item{
-
                 TopBar("Encargado")
                 AmbulanciaButton(){
                     nuevo = true
                 }
-                nuevo = true
+
                 if(nuevo)
                 {
                     RegistrarAmulancia(){
                         nuevo = false
                     }
                     Spacer(modifier = Modifier.height(60.dp))
+
+
                     for(i in 1..ambulancias.size){
                         abierto = ventantaAmbulancia(ambulancias[i-1])
                         Spacer(modifier = Modifier.padding(1.dp))
@@ -450,18 +456,43 @@ class View(roli: Int, opi: Int) {
                         }
                     }
                 }
-                else
-                {
-                    abierto = false
-                    for(i in 1..ambulancias.size){
-                        abierto = ventantaAmbulancia(ambulancias[i-1])
-                        Spacer(modifier = Modifier.padding(1.dp))
-                        if(abierto){
-                            TabAmbulancia(ambulancias[i-1])
-                            break
+                else{
+                    if(recomposicion) {
+                        var actual = remember {
+                            mutableIntStateOf(ambulancias.size)
                         }
+                        abierto = false
+                        for(i in 1..ambulancias.size){
+                            abierto = ventantaAmbulancia(ambulancias[i-1])
+                            Spacer(modifier = Modifier.padding(1.dp))
+                            if(abierto){
+                                TabAmbulancia(ambulancias[i-1])
+                                break
+                            }
+                            if(actual.value != ambulancias.size){
+                                recomposicion = !recomposicion
+                            }
+                        }
+                        Spacer(modifier = Modifier.padding(39.dp))
                     }
-                    Spacer(modifier = Modifier.padding(39.dp))
+                    else{
+                        var actual = remember {
+                            mutableIntStateOf(ambulancias.size)
+                        }
+                        abierto = false
+                        for(i in 1..ambulancias.size){
+                            abierto = ventantaAmbulancia(ambulancias[i-1])
+                            Spacer(modifier = Modifier.padding(1.dp))
+                            if(abierto){
+                                TabAmbulancia(ambulancias[i-1])
+                                break
+                            }
+                        }
+                        if(actual.value != ambulancias.size){
+                            recomposicion = !recomposicion
+                        }
+                        Spacer(modifier = Modifier.padding(39.dp))
+                    }
                 }
             }
         }
@@ -557,28 +588,38 @@ class View(roli: Int, opi: Int) {
                     )
                 }
                 if(!equipo_open){
-                    var x = 0
+                    EliminarAmbulancia(ambulancia){
+                        op = 1
+                    }
                 }
                 else
                 {
-                    Box(modifier = Modifier
-                        .size((ancho - 65).dp, (alto - 509).dp)
-                        .offset(15.dp, 0.dp)
-                        .background(Color.Black)
-                    ){
+                    Column{
                         Box(modifier = Modifier
-                            .size((ancho - 72).dp, (alto - 512).dp)
-                            .offset((3).dp, 0.dp)
-                            .background(Color.White)
-                        )
+                            .size((ancho - 65).dp, (alto - 509).dp)
+                            .offset(15.dp, 0.dp)
+                            .background(Color.Black)
+                        ){
+                            Box(modifier = Modifier
+                                .size((ancho - 72).dp, (alto - 512).dp)
+                                .offset((3).dp, 0.dp)
+                                .background(Color.White)
+                            ){
+                                LazyColumn(state = lazyListState,) {
+                                    item{
+                                        //falta implementar
+                                        TabEquipo()
+                                    }
+                                }
+                            }
+                        }
                     }
-                    //ambulancia.getEquipo
+
                 }
             }
             else
             {
                 Column{
-                    var text by rememberSaveable { mutableStateOf("") }
                     Box(modifier = Modifier
                         .size((ancho - 65).dp, (alto - 509).dp)
                         .offset(15.dp, 0.dp)
@@ -591,50 +632,80 @@ class View(roli: Int, opi: Int) {
                         ){
                             LazyColumn(state = lazyListState,) {
                                 item{
-                                    var coincidencia by rememberSaveable { mutableStateOf(false) }
-                                    var activo by rememberSaveable { mutableStateOf(true) }
-                                    Text("Correos", fontSize = 35.sp, color = Color.Black, modifier = Modifier.offset(7.dp))
-                                    text = SingleCampoTxt("Correo",0,0,
-                                        Modifier
-                                            .size((ancho - 87).dp, 50.dp)
-                                            .offset(7.dp, 20.dp),activo) {
-                                        activo = false
+                                    TabMedicos(ambulancia = ambulancia) {
                                         onClick(it)
                                     }
-                                    if(text != ""){
-                                        activo = true
-                                        for (medico in medicos){
-                                            coincidencia = true
-                                            if(!medico.getAsignado()){
-                                                for (i in text.indices){
-                                                    if(text[i].lowercase() != medico.getCorreo()[i].lowercase()){
-                                                        coincidencia = false
-                                                    }
-                                                }
-                                                if(coincidencia){
-                                                    if(ambulancia.medicos.find { medico.getCorreo().lowercase() == it.getCorreo().lowercase()} == null){
-                                                        Text(text = medico.getCorreo().lowercase(), fontSize = 23.sp, textAlign = TextAlign.Center, color = Color.Black, modifier = Modifier
-                                                            .offset(5.dp, 32.dp)
-                                                            .clickable {
-                                                                activo =
-                                                                    false; onClick(medico.getCorreo())
-                                                            })
-                                                        Box(modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .height(2.dp)
-                                                            .background(Color.Black))
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }else{activo = true}
-                                    ambulancia.GetMedicos { ambulancia.removeMedico(it)}
                                 }
                             }
                         }
                     }
                 }
             }
+        }
+    }
+    @Composable
+    fun TabEquipo(){
+
+    }
+
+    @Composable
+    fun EliminarAmbulancia(ambulancia: Ambulancia,onClick: () -> Unit){
+        var count by rememberSaveable { mutableStateOf(0) }
+        val alto = LocalConfiguration.current.screenHeightDp
+        Image(painter = painterResource(id = R.drawable.del),contentDescription = null,modifier = Modifier
+            .size(100.dp, 100.dp)
+            .offset(0.dp, (alto - 615).dp)
+            .clickable {
+                count++;if (count > 1) {
+                op = 1; ambulancias.remove(ambulancia)
+            }
+            }
+        )
+    }
+
+    @Composable
+    fun TabMedicos(ambulancia: Ambulancia, onClick: (String) -> Unit ){
+        var text by rememberSaveable { mutableStateOf("") }
+        var coincidencia by rememberSaveable { mutableStateOf(false) }
+        var activo by rememberSaveable { mutableStateOf(true) }
+        val ancho = LocalConfiguration.current.screenWidthDp
+        Text("Correos", fontSize = 35.sp, color = Color.Black, modifier = Modifier.offset(7.dp))
+        text = SingleCampoTxt("Correo",0,0,
+            Modifier
+                .size((ancho - 87).dp, 50.dp)
+                .offset(7.dp, 20.dp),activo) {
+            activo = false
+            onClick(it)
+        }
+        if(text != ""){
+            activo = true
+            for (medico in medicos){
+                coincidencia = true
+                if(!medico.getAsignado()){
+                    for (i in text.indices){
+                        if(text[i].lowercase() != medico.getCorreo()[i].lowercase()){
+                            coincidencia = false
+                        }
+                    }
+                    if(coincidencia){
+                        if(ambulancia.medicos.find { medico.getCorreo().lowercase() == it.getCorreo().lowercase()} == null){
+                            Text(text = medico.getCorreo().lowercase(), fontSize = 23.sp, textAlign = TextAlign.Center, color = Color.Black, modifier = Modifier
+                                .offset(5.dp, 32.dp)
+                                .clickable {
+                                    activo =
+                                        false; onClick(medico.getCorreo())
+                                })
+                            Box(modifier = Modifier
+                                .fillMaxWidth()
+                                .height(2.dp)
+                                .background(Color.Black))
+                        }
+                    }
+                }
+            }
+        }else{activo = true}
+        ambulancia.GetMedicos {
+            ambulancia.removeMedico(it)
         }
     }
     @Composable
@@ -804,7 +875,7 @@ class Compose : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val rol = rememberSaveable { mutableIntStateOf(0) }
-            val op = rememberSaveable { mutableIntStateOf(0) }
+            val op = rememberSaveable { mutableIntStateOf(1) }
             val view = remember { View(roli = rol.value, op.value) }
 
             view.Pantalla()

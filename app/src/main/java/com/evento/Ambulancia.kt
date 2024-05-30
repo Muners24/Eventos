@@ -37,7 +37,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.motion.widget.MotionScene.Transition.TransitionOnClick
 import com.evento.ui.theme.*
 
 class Ambulancia(num: String = ""){
@@ -47,21 +46,36 @@ class Ambulancia(num: String = ""){
     private var accidente: Accidente? = null
 
     @Composable
-    public fun ShowAccident(){
-
-        Spacer(modifier = Modifier.height(15.dp))
-
+    public fun ShowAccident(): Int{
         val ancho = LocalConfiguration.current.screenWidthDp
+        val participante = remember { mutableStateOf<Participante?>(accidente?.involucrados?.get(0)) }
+        var op = remember { mutableStateOf(0)}
 
-        Column {
-            EncabezadoAccidente(modifier = Modifier
-                .size((ancho - 20).dp, 80.dp)
-                .offset(10.dp, 0.dp)
-                .background(Color.Black))
-            CuerpoAccidente(){
-
+        if(participante.value != null){
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .background(Blue1_2)){
+                LazyColumn {
+                    item{
+                        TopBar("Médico")
+                        Spacer(modifier = Modifier.height(15.dp))
+                        EncabezadoAccidente(modifier = Modifier
+                            .size((ancho - 20).dp, 80.dp)
+                            .offset(10.dp, 0.dp)
+                            .background(Color.Black))
+                        CuerpoAccidente(){
+                            participante.value = it
+                        }
+                    }
+                }
             }
+            BotBar {
+                op.value = -1
+            }
+        } else{
+            participante.value!!.ConsultarDatosMedicos()
         }
+        return op.value
     }
     @Composable
     fun EncabezadoAccidente(modifier: Modifier){
@@ -79,7 +93,6 @@ class Ambulancia(num: String = ""){
         }
 
     }
-
     @Composable
     fun CuerpoAccidente(onclick: (Participante) -> Unit){
         val cantidad = accidente?.involucrados?.size
@@ -100,18 +113,22 @@ class Ambulancia(num: String = ""){
                         LazyColumn(){
                             item{
                                 BoxParticipante(){
-                                    //showDatosParticipante
+                                    onclick(it)
                                 }
                                 Spacer(modifier = Modifier.height(10.dp))
                                 accidente?.ubicacion?.let { it1 -> Text(text = it1, fontSize = 30.sp, textAlign = TextAlign.Justify, color = Color.Black, modifier = Modifier
                                     .width((ancho - 60).dp)
                                     .offset(15.dp)) }
                                 Spacer(modifier = Modifier.height(10.dp))
-                                Box(modifier = Modifier.fillMaxWidth().height(2.dp).background(Color.Black))
+                                Box(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(2.dp)
+                                    .background(Color.Black))
                                 Spacer(modifier = Modifier.height(10.dp))
                                 accidente?.descripcion?.let { it1 -> Text(text = it1, fontSize = 30.sp, textAlign = TextAlign.Justify, color = Color.Black, modifier = Modifier
                                     .width((ancho - 60).dp)
                                     .offset(15.dp)) }
+                                Spacer(modifier = Modifier.height(10.dp))
                             }
                         }
                     }
@@ -139,7 +156,6 @@ class Ambulancia(num: String = ""){
                         .offset((ancho - 130).dp, 10.dp)
                         .clickable { onclick(it) }
                     )
-
                 }
                 Box(modifier = Modifier
                     .fillMaxWidth()
@@ -152,7 +168,6 @@ class Ambulancia(num: String = ""){
     }
     @Composable
     public fun GetMedicos(x: Int = 0,y: Int = 0,onClick: (Medico) -> Unit){
-
         val ancho = LocalConfiguration.current.screenWidthDp
         Spacer(modifier = Modifier.height(45.dp))
         for(medico in medicos){
