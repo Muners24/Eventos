@@ -18,21 +18,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.evento.ui.theme.*
+import java.util.Random
+
 
 class View(roli: Int, opi: Int) {
     var rol by mutableIntStateOf(roli)
@@ -43,42 +44,65 @@ class View(roli: Int, opi: Int) {
     private val medicos = mutableListOf<Medico>()
     private var count by mutableIntStateOf(0)
     private var accidentes = mutableListOf<Accidente>()
-
+    private var evento = mutableStateOf<Evento?>(null)
+    private var ubicaciones = mutableListOf<Ubicacion>()
     private fun inicializarDatos(){
+        evento.value = Evento(
+            "Gran Carrera Ciclista",
+            "200",
+            "30 USD",
+            "2024-07-20",
+            "Valle de Guadalupe",
+            "Uso obligatorio de casco y protección\nNo se permite dejar basura en el recorrido",
+            "Una emocionante carrera ciclista a través del Parque Central, abierta para todos los niveles."
+        )
+
+        ubicaciones.clear()
+        ubicaciones.add(Ubicacion("Punto de control 1", 40.7306f, -73.9352f))
+        ubicaciones.add(Ubicacion("Punto de control 2", 40.7550f, -73.9857f))
+        ubicaciones.add(Ubicacion("Punto de control 3", 40.7128f, -74.0060f))
+        ubicaciones.add(Ubicacion("Punto de control 4", 40.7589f, -73.9851f))
+        ubicaciones.add(Ubicacion("Punto de control 5", 40.7069f, -74.0113f))
+        ubicaciones.add(Ubicacion("Punto de control 6", 40.7222f, -73.9884f))
+        ubicaciones.add(Ubicacion("Punto de control 7", 40.7580f, -73.9855f))
+        ubicaciones.add(Ubicacion("Punto de control 8", 40.7120f, -74.0009f))
+        ubicaciones.add(Ubicacion("Punto de control 9", 40.7362f, -73.9924f))
+        ubicaciones.add(Ubicacion("Punto de control 10", 40.7380f, -73.9819f))
+
         medicos.clear()
-        medicos.add(Medico("patricia.martinez@gmail.com", "contraseña1"))
-        medicos.add(Medico("laura.garcia@gmail.com", "contraseña2"))
-        medicos.add(Medico("luis.mendoza@gmail.com", "contraseña3"))
-        medicos.add(Medico("josemartinez@gmail.com", "contraseña4"))
-        medicos.add(Medico("maria.rodriguez@gmail.com", "contraseña5"))
-        medicos.add(Medico("carlos.perez@gmail.com", "contraseña6"))
-        medicos.add(Medico("luisa.lopez@gmail.com", "contraseña7"))
-        medicos.add(Medico("carlos.mendoza@gmail.com", "contraseña8"))
-        medicos.add(Medico("ana.gomez@gmail.com", "contraseña9"))
-        medicos.add(Medico("juan.lopez@gmail.com", "contraseña10"))
-        medicos.add(Medico("lopez@gmail.com", "contraseña10"))
-        medicos.add(Medico("llpez@gmail.com", "contraseña10"))
-        medicos.add(Medico("juan.martinez@gmail.com", "contraseña11"))
-        medicos.add(Medico("andrea.lopez@gmail.com", "contraseña12"))
-        medicos.add(Medico("daniel.garcia@gmail.com", "contraseña13"))
-        medicos.add(Medico("ana.rodriguez@gmail.com", "contraseña14"))
-        medicos.add(Medico("jose.gomez@gmail.com", "contraseña15"))
-        medicos.add(Medico("maria.perez@gmail.com", "contraseña16"))
-        medicos.add(Medico("lucia.martin@gmail.com", "contraseña17"))
-        medicos.add(Medico("miguel.fernandez@gmail.com", "contraseña18"))
-        medicos.add(Medico("carolina.sanchez@gmail.com", "contraseña19"))
-        medicos.add(Medico("pedro.gonzalez@gmail.com", "contraseña20"))
+        medicos.add(Medico("patricia.martinez@gmail.com", "contraseña1",ambulancias))
+        medicos.add(Medico("laura.garcia@gmail.com", "contraseña2",ambulancias))
+        medicos.add(Medico("luis.mendoza@gmail.com", "contraseña3",ambulancias))
+        medicos.add(Medico("josemartinez@gmail.com", "contraseña4",ambulancias))
+        medicos.add(Medico("maria.rodriguez@gmail.com", "contraseña5",ambulancias))
+        medicos.add(Medico("carlos.perez@gmail.com", "contraseña6",ambulancias))
+        medicos.add(Medico("luisa.lopez@gmail.com", "contraseña7",ambulancias))
+        medicos.add(Medico("carlos.mendoza@gmail.com", "contraseña8",ambulancias))
+        medicos.add(Medico("ana.gomez@gmail.com", "contraseña9",ambulancias))
+        medicos.add(Medico("juan.lopez@gmail.com", "contraseña10",ambulancias))
+        medicos.add(Medico("lopez@gmail.com", "contraseña10",ambulancias))
+        medicos.add(Medico("llpez@gmail.com", "contraseña10",ambulancias))
+        medicos.add(Medico("juan.martinez@gmail.com", "contraseña11",ambulancias))
+        medicos.add(Medico("andrea.lopez@gmail.com", "contraseña12",ambulancias))
+        medicos.add(Medico("daniel.garcia@gmail.com", "contraseña13",ambulancias))
+        medicos.add(Medico("ana.rodriguez@gmail.com", "contraseña14",ambulancias))
+        medicos.add(Medico("jose.gomez@gmail.com", "contraseña15",ambulancias))
+        medicos.add(Medico("maria.perez@gmail.com", "contraseña16",ambulancias))
+        medicos.add(Medico("lucia.martin@gmail.com", "contraseña17",ambulancias))
+        medicos.add(Medico("miguel.fernandez@gmail.com", "contraseña18",ambulancias))
+        medicos.add(Medico("carolina.sanchez@gmail.com", "contraseña19",ambulancias))
+        medicos.add(Medico("pedro.gonzalez@gmail.com", "contraseña20",ambulancias))
         staffs.clear()
-        staffs.add(Staff("lucas@gmail.com", "contraseña1"))
-        staffs.add(Staff("mariana@gmail.com", "contraseña2"))
-        staffs.add(Staff("carolina@gmail.com", "contraseña3"))
-        staffs.add(Staff("pablo@gmail.com", "contraseña4"))
-        staffs.add(Staff("juan@gmail.com", "contraseña5"))
-        staffs.add(Staff("ana@gmail.com", "contraseña6"))
-        staffs.add(Staff("luis@gmail.com", "contraseña7"))
-        staffs.add(Staff("marco@gmail.com", "contraseña8"))
-        staffs.add(Staff("sofia@gmail.com", "contraseña9"))
-        staffs.add(Staff("diana@gmail.com", "contraseña10"))
+        staffs.add(Staff("lucas@gmail.com", "contraseña1",participantes,accidentes,ubicaciones))
+        staffs.add(Staff("mariana@gmail.com", "contraseña2",participantes,accidentes,ubicaciones))
+        staffs.add(Staff("carolina@gmail.com", "contraseña3",participantes,accidentes,ubicaciones))
+        staffs.add(Staff("pablo@gmail.com", "contraseña4",participantes,accidentes,ubicaciones))
+        staffs.add(Staff("juan@gmail.com", "contraseña5",participantes,accidentes,ubicaciones))
+        staffs.add(Staff("ana@gmail.com", "contraseña6",participantes,accidentes,ubicaciones))
+        staffs.add(Staff("luis@gmail.com", "contraseña7",participantes,accidentes,ubicaciones))
+        staffs.add(Staff("marco@gmail.com", "contraseña8",participantes,accidentes,ubicaciones))
+        staffs.add(Staff("sofia@gmail.com", "contraseña9",participantes,accidentes,ubicaciones))
+        staffs.add(Staff("diana@gmail.com", "contraseña10",participantes,accidentes,ubicaciones))
 
         ambulancias.clear()
         ambulancias.add(Ambulancia("12345"))
@@ -101,11 +125,11 @@ class View(roli: Int, opi: Int) {
         participantes.clear()
         participantes.add(
             Participante(
-                "Maria",
+                "Maria Lopez",
                 "98765",
                 "1985-05-15",
                 "Femenino",
-                "maria@example.com",
+                "maria@gmail.com",
                 "0987654321",
                 "646 189 38 93",
                 "987654321",
@@ -122,11 +146,11 @@ class View(roli: Int, opi: Int) {
 
         participantes.add(
             Participante(
-                "Juan",
+                "Juan Perez",
                 "12345",
                 "1990-01-01",
                 "Masculino",
-                "juan@example.com",
+                "juan@gmail.com",
                 "1234567890",
                 "María",
                 "123456789",
@@ -143,11 +167,11 @@ class View(roli: Int, opi: Int) {
 
         participantes.add(
             Participante(
-                "Ana",
+                "Ana Gomez",
                 "54321",
                 "1988-07-10",
                 "Femenino",
-                "ana@example.com",
+                "ana@gmail.com",
                 "0987654321",
                 "Pedro",
                 "987654321",
@@ -164,11 +188,11 @@ class View(roli: Int, opi: Int) {
 
         participantes.add(
             Participante(
-                "Carlos",
+                "Carlos Ruiz",
                 "67890",
                 "1983-12-25",
                 "Masculino",
-                "carlos@example.com",
+                "carlos@gmail.com",
                 "9876543210",
                 "Luisa",
                 "123456789",
@@ -185,11 +209,11 @@ class View(roli: Int, opi: Int) {
 
         participantes.add(
             Participante(
-                "Elena",
+                "Elena Martinez",
                 "13579",
                 "1975-03-18",
                 "Femenino",
-                "elena@example.com",
+                "elena@gmail.com",
                 "0123456789",
                 "Pedro",
                 "987654321",
@@ -206,11 +230,11 @@ class View(roli: Int, opi: Int) {
 
         participantes.add(
             Participante(
-                "Javier",
+                "Javier Fernandez",
                 "24680",
                 "1980-09-03",
                 "Masculino",
-                "javier@example.com",
+                "javier@gmail.com",
                 "1357924680",
                 "Sandra",
                 "987654321",
@@ -227,11 +251,11 @@ class View(roli: Int, opi: Int) {
 
         participantes.add(
             Participante(
-                "Lucia",
+                "Lucia Diaz",
                 "97531",
                 "1992-11-30",
                 "Femenino",
-                "lucia@example.com",
+                "lucia@gmail.com",
                 "9876543210",
                 "Diego",
                 "123456789",
@@ -246,103 +270,186 @@ class View(roli: Int, opi: Int) {
             )
         )
 
+
         val involucrados = mutableListOf<Participante>()
         involucrados.add(participantes[0])
         involucrados.add(participantes[1])
         involucrados.add(participantes[2])
-        accidentes.add(Accidente(involucrados,"Los participantes tienen lesiones que van desde cortes menores hasta posibles fracturas"))
+        val random = Random()
+        val indice = random.nextInt(ubicaciones.size-1)
+        accidentes.add(Accidente(involucrados,"Los participantes tienen lesiones que van desde cortes menores hasta posibles fracturas",ubicaciones[indice]))
         //ambulancias[0].asignAccidente()
     }
     @Composable
     fun Pantalla() {
+
         if(count == 0){
             inicializarDatos()
         }
         count++
-
-        val it = accidentes.iterator()
-        while (it.hasNext()) {
-            val accidente = it.next()
-            for (ambulancia in ambulancias) {
-                if (ambulancia.getAccidente() == null) {
-                    ambulancia.asignAccidente(accidente)
-                    it.remove()
-                    break
+        if(evento.value != null){
+            val it = accidentes.iterator()
+            while (it.hasNext()) {
+                val accidente = it.next()
+                for (ambulancia in ambulancias) {
+                    if (ambulancia.getAccidente() == null) {
+                        ambulancia.asignAccidente(accidente)
+                        it.remove()
+                        break
+                    }
                 }
+            }
+
+            when(op){
+                0 -> {
+                    when(rol){
+                        0 -> VerEvento()
+                        1 -> op = staffs[0].registrarAccidente()
+                        2 -> op = medicos[0].verAccidente()
+                    }
+                }
+                1 -> {
+                    when(rol){
+                        0 -> EncargadoMedicos()
+                        //registrar datos medicos no se implementara
+                        1 -> MainMenu()
+                        //Disponibilidad ambulancia no se implementara
+                        2 -> MainMenu()
+                    }
+                }
+                else -> {MainMenu()}
             }
         }
-
-        when(op){
-            -1 -> {MainMenu()}
-            0 -> {
-                if(rol == 0){
-                    //registrarEvento
-                    MainMenu()
-                } else if (rol == 1){
-                    //registrarAccidente
-                    StaffAccidente()
-                } else if (rol == 2){
-                    //Veraccidente
-                    MedicoAccidente()
-                }
-            }
-            1 -> {
-                if(rol == 0){
-                    //encargadoMedicos
-                    EncargadoMedicos()
-                } else if (rol == 1){
-                    //no se implementara
-                    MainMenu()
-                } else if (rol == 2){
-                    //Disponibilidad
-                    MainMenu()
-                }else{
-                    MainMenu()
-                }
-            }
-            else -> {MainMenu()}
+        else
+        {
+            NoEvento()
         }
-        if (op == -1){
-            MainMenu()
-        }else if (op == 1){
-            if(rol == 0){
-                EncargadoMedicos()
+
+    }
+
+    @Composable
+    fun NoEvento(){
+        Column(
+            Modifier
+                .fillMaxSize()
+                .background(Fondo)) {
+                Box{
+                    if(op == -1){
+                        when(rol){
+                            0 -> TopBar("Encargado")
+                            1 -> TopBar("Staff")
+                            2 -> TopBar("Médico")
+                        }
+                        TopButtonRight{
+                            if (rol != 2){
+                                rol++
+                            } else{
+                                rol = 0
+                            }
+                        }
+                        TopButtonLeft{
+                            if (rol != 0){
+                                rol--
+                            } else{
+                                rol = 2
+                            }
+                        }
+                    }
+                }
+                if(rol > 0){
+                    MsgNoEvento()
+                }
+                else
+                {
+                    RegistroEvento()
+                }
+
+        }
+        BotBar {
+            op = -1
+        }
+    }
+
+
+    @Composable
+    fun RegistroEvento(){
+        val opciones = remember { mutableListOf<String>() }
+        val imagenes = remember { mutableListOf<Int>() }
+
+        val count = remember { mutableIntStateOf(0)}
+        if( count.intValue == 0){
+            opciones.clear()
+            imagenes.clear()
+            opciones.add("Registrar\nEvento")
+            imagenes.add(R.drawable.podio)
+            opciones.add("Médicos")
+            imagenes.add(R.drawable.ambulancia)
+            opciones.add("Datos\nMedicos")
+            imagenes.add(R.drawable.podio)
+            count.intValue++
+        }
+        when (op) {
+            -1 -> {
+
+                for (i in opciones.indices) {
+                    Spacer(modifier = Modifier.height(30.dp))
+                    Option(opciones[i], imagenes[i]){
+                        op = i
+                    }
+                }
             }
+            0 -> EncargadoRegistrarEvento()
+            1 -> EncargadoMedicos()
         }
     }
     @Composable
+    fun MsgNoEvento(){
+        Column(){
+            Spacer(modifier = Modifier.height(150.dp))
+            Text(text = "No hay un", fontSize = 60.sp, color = Color.Black, textAlign = TextAlign.Center,modifier = Modifier
+                .fillMaxWidth())
+            Spacer(modifier = Modifier.height(15.dp))
+            Text(text = "evento", fontSize = 60.sp, color = Color.Black, textAlign = TextAlign.Center,modifier = Modifier
+                .fillMaxWidth())
+            Spacer(modifier = Modifier.height(15.dp))
+            Text(text = "asignado...", fontSize = 60.sp, color = Color.Black, textAlign = TextAlign.Center,modifier = Modifier
+                .fillMaxWidth())
+        }
+    }
+
+    @Composable
     fun MainMenu(){
-        val opciones = remember { mutableStateOf(mutableListOf<String>()) }
-        val imagenes = remember { mutableStateOf(mutableListOf<Int>()) }
+        val opciones = remember { mutableListOf<String>() }
+        val imagenes = remember { mutableListOf<Int>() }
         var puesto by rememberSaveable { mutableStateOf("") }
 
-        opciones.value.clear()
-        imagenes.value.clear()
+        opciones.clear()
+        imagenes.clear()
         when (rol) {
             0 -> {
                 puesto = "Encargado"
-                opciones.value.add("Registrar\nEvento")
-                opciones.value.add("Médicos")
-                opciones.value.add("Datos\nMédicos")
-                opciones.value.add("Accidentes")
-                imagenes.value.add(R.drawable.podio)
-                imagenes.value.add(R.drawable.ambulancia)
-                imagenes.value.add(R.drawable.part)
-                imagenes.value.add(R.drawable.ambulancia)
+                opciones.add("Consultar\nEvento")
+                opciones.add("Médicos")
+                opciones.add("Datos\nMédicos")
+                opciones.add("Accidentes")
+                imagenes.add(R.drawable.podio)
+                imagenes.add(R.drawable.ambulancia)
+                imagenes.add(R.drawable.part)
+                imagenes.add(R.drawable.ambulancia)
             }
             1 -> {
                 puesto = "Staff"
-                opciones.value.add("Registrar\nAccidente")
-                opciones.value.add("Registrar\nCorredor")
-                imagenes.value.add(R.drawable.podio)
-                imagenes.value.add(R.drawable.part)
+                opciones.add("Registrar\nAccidente")
+                opciones.add("Registrar\nCorredor")
+                imagenes.add(R.drawable.podio)
+                imagenes.add(R.drawable.part)
             }
             2 -> {
                 puesto = "Médico"
-                opciones.value.add("Accidente")
-                opciones.value.add("Disponible")
-                imagenes.value.add(R.drawable.podio)
-                imagenes.value.add(R.drawable.ambulancia)
+                opciones.add("Consultar\nAccidente")
+                opciones.add("Actualizar\nEstado del\nAccidente")
+                imagenes.add(R.drawable.podio)
+                imagenes.add(R.drawable.ambulancia)
             }
         }
 
@@ -371,9 +478,9 @@ class View(roli: Int, opi: Int) {
                         op=-1
                     }
                 }
-                for (i in opciones.value.indices) {
+                for (i in opciones.indices) {
                     Spacer(modifier = Modifier.height(30.dp))
-                    Option(opciones.value[i], imagenes.value[i]){
+                    Option(opciones[i], imagenes[i]){
                         op = i
                     }
                 }
@@ -381,47 +488,146 @@ class View(roli: Int, opi: Int) {
         }
         BotBar(){op = -1}
     }
+
     @Composable
-    fun EncargadoEvento(){
-        //falta implementar
-    }
-    @Composable
-    fun MedicoAccidente(){
-        if(ambulancias[0].getAccidente() != null){
-            op = ambulancias[0].ShowAccident()
-        }else{
-            NoAccidenteMensaje()
-        }
-    }
-    @Composable
-    fun NoAccidenteMensaje(){
+    fun VerEvento(){
+        var count = remember { mutableIntStateOf(0) }
+        val ancho = LocalConfiguration.current.screenWidthDp
         LazyColumn(modifier = Modifier
             .fillMaxSize()
-            .background(Blue1_2))
-        {
+            .background(Fondo)) {
             item{
-                TopBar("Medico")
-                Spacer(modifier = Modifier.height(150.dp))
-                Text(text = "No hay un", fontSize = 60.sp, color = Color.Black, textAlign = TextAlign.Center,modifier = Modifier
-                    .fillMaxWidth())
-                Spacer(modifier = Modifier.height(15.dp))
-                Text(text = "accidente", fontSize = 60.sp, color = Color.Black, textAlign = TextAlign.Center,modifier = Modifier
-                    .fillMaxWidth())
-                Spacer(modifier = Modifier.height(15.dp))
-                Text(text = "asignado...", fontSize = 60.sp, color = Color.Black, textAlign = TextAlign.Center,modifier = Modifier
-                    .fillMaxWidth())
+                TopBar("Encargado")
+                Spacer(Modifier.height(20.dp))
+                evento.value?.let { Text(text = it.nombre, textAlign = TextAlign.Center, fontSize = 35.sp, modifier = Modifier
+                    .fillParentMaxWidth()) }
+                evento.value?.ConsultarEvento()
+                Box(modifier = Modifier.fillParentMaxWidth().height(3.dp).background(Color.Black))
+                Box(modifier = Modifier.height(300.dp)){
+                    Image(painter = painterResource(id = R.drawable.del),contentDescription = null, modifier = Modifier
+                        .size(100.dp,100.dp)
+                        .fillParentMaxWidth()
+                        .offset((ancho/2-50).dp,50.dp)
+                        .clickable { count.intValue++;
+                            if(count.intValue > 1){
+                                op = -1; evento.value = null
+                                accidentes.clear()
+                                for(ambulancia in ambulancias){
+                                    ambulancia.removeAccidente()
+                                }
+                            }
+                        }
+                    )
+                }
             }
         }
-        BotBar() {
+        BotBar {
             op = -1
         }
     }
 
     @Composable
-    fun MedicoDisponibilidad(){
-        //falta implementar
+    fun EncargadoRegistrarEvento(){
+        val ancho = LocalConfiguration.current.screenWidthDp
+        val nombre = remember { mutableStateOf("" )}
+        val cupo = remember { mutableStateOf("" )}
+        val cuota = remember { mutableStateOf("" )}
+        val dia_evento = remember { mutableStateOf("" )}
+        val ubicacion = remember { mutableStateOf("" )}
+        val descripcion = remember { mutableStateOf("" )}
+        val reglas = remember { mutableStateOf("" )}
+
+        LazyColumn(
+            Modifier
+                .fillMaxSize()
+                .background(Fondo)) {
+            item{
+                TopBar("Encargado")
+                Text(
+                    text = "Registro de Evento",
+                    fontSize = 30.sp,
+                    textAlign = TextAlign.Center,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(18.dp)
+                )
+                nombre.value = campoEvento("Nombre del evento")
+                cupo.value = campoEvento("Límite de participantes", true,keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
+                cuota.value = campoEvento("Cuota de inscripcion", true,keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
+                dia_evento.value = campoFechaEvento("Día del evento")
+                ubicacion.value = campoEvento("Ubicación")
+                reglas.value = campoEvento("Reglas")
+                descripcion.value = campoEvento("Descripción")
+
+                Box(modifier = Modifier
+                    .fillParentMaxWidth()
+                    .height(500.dp)){
+                    if (nombre.value != "" && cupo.value != "" && cuota.value != "" && dia_evento.value != "" && ubicacion.value != "" && descripcion.value != "" && reglas.value != ""){
+                        Image(painter = painterResource(id = R.drawable.save), contentDescription = null, modifier = Modifier
+                            .size(80.dp, 80.dp)
+                            .offset((ancho / 2 - 40).dp, 30.dp)
+                            .clickable {
+                                evento.value = Evento(
+                                    nombre.value,
+                                    cupo.value,
+                                    cuota.value,
+                                    dia_evento.value,
+                                    ubicacion.value,
+                                    reglas.value,
+                                    descripcion.value
+                                )
+                                op = -1
+                            }
+                        )
+                    }
+                }
+            }
+        }
+        BotBar {
+            op = -1
+        }
     }
-    //encargadoMedicos..... medicos listo..... equipo ?  ... listo 75%
+
+    @Composable
+    fun campoEvento(text: String,singleLine: Boolean = false,keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)): String{
+        var texto_campo = rememberSaveable { mutableStateOf("" )}
+        Spacer(modifier = Modifier.height(20.dp))
+        TextField(value = texto_campo.value, onValueChange = { newValue -> texto_campo.value = newValue},
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp, 1.dp),
+            label = { Text(text, textAlign = TextAlign.Center, modifier = Modifier) },
+            singleLine = singleLine,
+            keyboardOptions = keyboardOptions
+        )
+        return texto_campo.value
+    }
+    @Composable
+    fun campoFechaEvento(text: String): String {
+        var textoCampo by rememberSaveable { mutableStateOf("") }
+        var fecha by rememberSaveable { mutableStateOf("") }
+
+
+        Spacer(modifier = Modifier.height(20.dp))
+        TextField(
+            value = fecha,
+            onValueChange = { newValue ->
+                fecha = newValue
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp, 1.dp),
+            label = { Text(text, textAlign = TextAlign.Center, modifier = Modifier) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        )
+
+        return fecha
+    }
+
+
+
     @Composable
     fun EncargadoMedicos() {
         var nuevo by rememberSaveable { mutableStateOf(false) }
@@ -496,7 +702,12 @@ class View(roli: Int, opi: Int) {
                 }
             }
         }
-        BotBar(){ op = -1 }
+        BotBar(){
+            when(it){
+                1 -> op = -1
+                2 -> if(nuevo) { nuevo = false} else { op = -1 }
+            }
+        }
     }
     @Composable
     fun ventantaAmbulancia(ambulanciai: Ambulancia): Boolean{
@@ -745,129 +956,6 @@ class View(roli: Int, opi: Int) {
             }
         }
     }
-    //staff... 100% listo ...
-    @Composable
-    fun StaffAccidente(){
-        val participantesInvol = remember { mutableStateOf(mutableListOf<Participante>()) }
-        val participantesAccidente = remember { mutableStateOf(mutableListOf<String>()) }
-        var involucradosCount by rememberSaveable { mutableIntStateOf(0) }
-        var listo by rememberSaveable { mutableStateOf(true) }
-        var reset by rememberSaveable { mutableStateOf(false) }
-        val ancho = LocalConfiguration.current.screenWidthDp
-        var descripcion by rememberSaveable { mutableStateOf("") }
-
-        LazyColumn(modifier = Modifier
-            .fillMaxSize()
-            .background(Fondo)) {
-            item{
-                TopBar("Staff")
-                Text(text = "Registro de Accidente", fontSize = 30.sp, textAlign = TextAlign.Center, color = Color.Black,  modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(18.dp)
-                )
-                Text(text = "Involucrados", fontSize = 25.sp, textAlign = TextAlign.Center, color = Color.Black,  modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                )
-                involucradosCount = contador(reset)
-                listo = true
-                reset = false
-                while(participantesAccidente.value.size<involucradosCount){
-                    participantesAccidente.value.add("")
-                }
-
-                for (i in 1..involucradosCount ){
-                    Box{
-                        participantesAccidente.value[i-1] = (CampoTxt("Nombre o numero de participante"))
-                        if(participantes.find { participantesAccidente.value[i-1].lowercase() == it.nombre.lowercase() || participantesAccidente.value[i-1] == it.numeroParticipante} != null){
-                            Image(painter = painterResource(id = R.drawable.check),contentDescription = null, modifier = Modifier
-                                .size(40.dp, 40.dp)
-                                .offset((ancho - 65).dp, 5.dp)
-                            )
-                        } else{ listo = false }
-                    }
-                }
-                if(involucradosCount > 0)
-                {
-                    descripcion = CampoTxt("Descripción", 12)
-                    if(listo){
-                        if(descripcion != ""){
-                            SendButton(20){
-                                involucradosCount = 0
-                                listo = true
-                                reset = true
-                                for(participante in participantes){
-                                    if(participantesAccidente.value.find {participante.nombre.lowercase() == it || participante.numeroParticipante == it} != null){
-                                        participantesInvol.value.add(participante)
-                                    }
-                                }
-                                accidentes.add(Accidente(participantesInvol.value.toMutableList(),descripcion))
-                                participantesInvol.value.clear()
-                                participantesAccidente.value.clear()
-                                descripcion = ""
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        BotBar(){ op = -1 }
-    }
-    @Composable
-    fun contador(reset: Boolean): Int{
-        var count by rememberSaveable { mutableStateOf(1) }
-        var ancho = LocalConfiguration.current.screenWidthDp
-        if(reset){
-            count = 0
-        }
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding((ancho / 4).dp, 10.dp)) {
-            Box(
-                modifier = Modifier
-                    .size(50.dp, 50.dp)
-                    .offset(0.dp, 5.dp)
-                    .clip(RoundedCornerShape(8.dp))  // Aplica esquinas redondeadas
-                    .background(Blue1)
-                    .clickable { count = if (count > 0) count - 1 else 0 },
-                contentAlignment = Alignment.Center
-            ) {
-                Image(painter = painterResource(id = R.drawable.decrementar),contentDescription = null, modifier = Modifier.size(50.dp,50.dp))
-            }
-            Box(
-                modifier = Modifier
-                    .size(60.dp, 60.dp)
-                    .offset(15.dp)
-                    .clip(RoundedCornerShape(8.dp))// Aplica esquinas redondeadas
-                    .background(Blue1)
-                    .clickable { count++ },
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = count.toString(), fontSize = 40.sp)
-            }
-            Box(
-                modifier = Modifier
-                    .size(50.dp, 50.dp)
-                    .offset(30.dp, 5.dp)
-                    .clip(RoundedCornerShape(8.dp))  // Aplica esquinas redondeadas
-                    .background(Blue1)
-                    .clickable { count++ },
-                contentAlignment = Alignment.Center
-            ) {
-                Image(painter = painterResource(id = R.drawable.add_counter),contentDescription = null, modifier = Modifier.size(50.dp,50.dp))
-            }
-        }
-        return count
-    }
-    @Composable
-    fun SendButton(padding: Int = 0,onClick: () -> Unit){
-        var ancho = LocalConfiguration.current.screenWidthDp
-        Image(painter = painterResource(id = R.drawable.send), contentDescription = null, modifier = Modifier
-            .size(80.dp, 80.dp)
-            .offset((ancho / 2 - 42).dp, padding.dp)
-            .clickable { onClick() }
-        )
-    }
 }
 
 class Compose : ComponentActivity() {
@@ -875,7 +963,7 @@ class Compose : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val rol = rememberSaveable { mutableIntStateOf(0) }
-            val op = rememberSaveable { mutableIntStateOf(1) }
+            val op = rememberSaveable { mutableIntStateOf(0) }
             val view = remember { View(roli = rol.value, op.value) }
 
             view.Pantalla()
@@ -891,8 +979,8 @@ class Compose : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewUserProfile() {
-    val rol = rememberSaveable { mutableIntStateOf(2) }
-    val op = rememberSaveable { mutableIntStateOf(0) }
+    val rol = rememberSaveable { mutableIntStateOf(0) }
+    val op = rememberSaveable { mutableIntStateOf(-1) }
     val view = remember { View(rol.value, op.value) }
     view.Pantalla()
 

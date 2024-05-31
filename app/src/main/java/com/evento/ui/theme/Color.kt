@@ -13,6 +13,7 @@ val Pink40 = Color(0xFF7D5260)
 val Top = Color(0xFF7f5af0)
 val Fondo = Color(0xFF81c0c7)
 val FondoConsutla = Color(0xFF8fd3e0)
+val FondoEvento = Color(0xFF98ffe2)
 
 val Ventanta = Color(0xFF4b89af)
 val VentanaBody = Color(0xFFf3f2f1)

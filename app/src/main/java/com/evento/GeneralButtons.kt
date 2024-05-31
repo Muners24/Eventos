@@ -20,6 +20,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -89,7 +91,6 @@ fun SingleNumCampoTxt(what: String = "",x: Int = 0,y: Int = 0, modifier: Modifie
 @Composable
 fun CampoTxt(what: String = "",padding: Int = 0, modifier: Modifier = Modifier):String {
     var text by rememberSaveable { mutableStateOf("") }
-    var ancho = LocalConfiguration.current.screenWidthDp
     TextField(value = text, onValueChange = { newValue -> text = newValue}, modifier = modifier
         .fillMaxWidth()
         .padding(15.dp, (padding + 1).dp),
@@ -173,9 +174,10 @@ fun TopBar(puesto: String = "") {
 fun Option(optxt: String = "",img: Int,onClick: () -> Unit) {
     val ancho = LocalConfiguration.current.screenWidthDp
     val saltos = countSaltos(optxt)
+
     Box(
         modifier = Modifier
-            .size((ancho - 30).dp, 110.dp + (saltos * 30 + saltos * 12).dp)
+            .size((ancho - 30).dp, (110+saltos * 30 + saltos * 25).dp)
             .offset(15.dp, 0.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(Blue3)
@@ -187,7 +189,7 @@ fun Option(optxt: String = "",img: Int,onClick: () -> Unit) {
             color = Blue1,
             modifier = Modifier
                 .size(363.dp, 160.dp)
-                .offset(25.dp, 22.dp),
+                .offset(15.dp, 22.dp),
             textAlign = TextAlign.Left
         )
         Image(
@@ -195,7 +197,9 @@ fun Option(optxt: String = "",img: Int,onClick: () -> Unit) {
             contentDescription = null,
             modifier = Modifier
                 .scale(scaleX = 0.65f, scaleY = 0.65f)
-                .offset((ancho - 80).dp, 0.dp)
+                .offset((ancho - 80).dp, (0).dp)
+                .fillMaxHeight()
+                .wrapContentHeight(align = Alignment.CenterVertically)
         )
     }
 }
